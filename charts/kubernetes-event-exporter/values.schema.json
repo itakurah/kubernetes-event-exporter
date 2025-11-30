@@ -678,6 +678,6 @@
       }
     }
   },
-  "required": ["namespace", "config"]
+  "required": ["config"]
 }
 

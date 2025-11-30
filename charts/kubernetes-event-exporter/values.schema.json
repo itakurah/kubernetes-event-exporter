@@ -1,0 +1,683 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Kubernetes Event Exporter Values",
+  "description": "Schema for validating kubernetes-event-exporter Helm chart values",
+  "type": "object",
+  "properties": {
+    "image": {
+      "type": "object",
+      "description": "Container image configuration",
+      "properties": {
+        "registry": {
+          "type": "string",
+          "description": "Container image registry (optional, prepended to repository if set)"
+        },
+        "repository": {
+          "type": "string",
+          "description": "Container image repository"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag (ignored if digest is set)"
+        },
+        "digest": {
+          "type": "string",
+          "description": "Container image digest (overrides tag if set)"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Image pull policy",
+          "enum": ["Always", "IfNotPresent", "Never"],
+          "default": "IfNotPresent"
+        },
+        "pullSecrets": {
+          "type": "array",
+          "description": "List of image pull secrets for private registries",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the Kubernetes secret"
+              }
+            },
+            "required": ["name"]
+          },
+          "default": []
+        }
+      },
+      "required": ["repository", "tag"]
+    },
+    "rbac": {
+      "type": "object",
+      "description": "RBAC configuration for the service account",
+      "properties": {
+        "rules": {
+          "type": "array",
+          "description": "List of RBAC rules for the ClusterRole",
+          "items": {
+            "type": "object",
+            "properties": {
+              "apiGroups": {
+                "type": "array",
+                "description": "API groups this rule applies to",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "resources": {
+                "type": "array",
+                "description": "Resources this rule applies to",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "verbs": {
+                "type": "array",
+                "description": "Verbs that can be performed",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": ["apiGroups", "resources", "verbs"]
+          }
+        }
+      },
+      "required": ["rules"]
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Security context configuration for pods and containers",
+      "properties": {
+        "podSecurityContext": {
+          "type": "object",
+          "description": "Pod-level security context (overrides defaults: runAsNonRoot: true, seccompProfile.type: RuntimeDefault)",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether to enable pod-level security context",
+              "default": true
+            }
+          }
+        },
+        "containerSecurityContext": {
+          "type": "object",
+          "description": "Container-level security context (overrides defaults: allowPrivilegeEscalation: false, capabilities.drop: [ALL])",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether to enable container-level security context",
+              "default": true
+            }
+          }
+        }
+      }
+    },
+    "namespace": {
+      "type": "string",
+      "description": "Namespace where kubernetes-event-exporter will be deployed"
+    },
+    "config": {
+      "type": "object",
+      "description": "Kubernetes event exporter configuration",
+      "properties": {
+        "logLevel": {
+          "type": "string",
+          "description": "Logging level",
+          "enum": ["trace", "debug", "info", "warn", "error", "fatal", "panic"]
+        },
+        "logFormat": {
+          "type": "string",
+          "description": "Log format",
+          "enum": ["json", "pretty"]
+        },
+        "maxEventAgeSeconds": {
+          "type": "integer",
+          "description": "Maximum age of events to process (in seconds). Defaults to 5 if not set.",
+          "minimum": 0,
+          "default": 5
+        },
+        "kubeQPS": {
+          "type": "number",
+          "description": "Kubernetes API QPS (queries per second). Defaults to 5.0 if not set.",
+          "minimum": 0,
+          "default": 5.0
+        },
+        "kubeBurst": {
+          "type": "integer",
+          "description": "Kubernetes API burst limit. Defaults to 10 if not set.",
+          "minimum": 1,
+          "default": 10
+        },
+        "clusterName": {
+          "type": "string",
+          "description": "Cluster name to include in events"
+        },
+        "namespace": {
+          "type": "string",
+          "description": "Namespace to watch (empty for all namespaces)"
+        },
+        "leaderElection": {
+          "type": "object",
+          "description": "Leader election configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable leader election",
+              "default": false
+            },
+            "leaderElectionID": {
+              "type": "string",
+              "description": "Leader election ID"
+            }
+          }
+        },
+        "metricsNamePrefix": {
+          "type": "string",
+          "description": "Prefix for Prometheus metrics names (must match regex: ^[a-zA-Z][a-zA-Z0-9_:]*_$). Must end with trailing underscore."
+        },
+        "omitLookup": {
+          "type": "boolean",
+          "description": "Omit object metadata lookup (faster but less detailed events)",
+          "default": false
+        },
+        "cacheSize": {
+          "type": "integer",
+          "description": "Size of the object metadata cache",
+          "minimum": 1,
+          "default": 1024
+        },
+        "route": {
+          "type": "object",
+          "description": "Event routing configuration",
+          "properties": {
+            "routes": {
+              "type": "array",
+              "description": "List of route rules (required, must not be empty)",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "match": {
+                    "type": "array",
+                    "description": "Match rules for routing events",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "receiver": {
+                          "type": "string",
+                          "description": "Receiver name to route events to"
+                        },
+                        "type": {
+                          "type": "string",
+                          "description": "Event type (Normal or Warning)",
+                          "enum": ["Normal", "Warning"]
+                        },
+                        "namespace": {
+                          "type": "string",
+                          "description": "Namespace to match"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "description": "Kubernetes object kind to match"
+                        },
+                        "reason": {
+                          "type": "string",
+                          "description": "Event reason to match"
+                        },
+                        "message": {
+                          "type": "string",
+                          "description": "Event message pattern to match (regex)"
+                        },
+                        "apiVersion": {
+                          "type": "string",
+                          "description": "API version to match (regex)"
+                        },
+                        "component": {
+                          "type": "string",
+                          "description": "Source component to match (regex)"
+                        },
+                        "host": {
+                          "type": "string",
+                          "description": "Source host to match (regex)"
+                        },
+                        "minCount": {
+                          "type": "integer",
+                          "description": "Minimum event count to match",
+                          "minimum": 0,
+                          "default": 0
+                        },
+                        "labels": {
+                          "type": "object",
+                          "description": "Label selectors to match (regex patterns)",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        },
+                        "annotations": {
+                          "type": "object",
+                          "description": "Annotation selectors to match (regex patterns)",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "drop": {
+                    "type": "array",
+                    "description": "Drop rules to filter out events (same structure as match rules)",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "namespace": {"type": "string"},
+                        "type": {"type": "string"},
+                        "kind": {"type": "string"},
+                        "reason": {"type": "string"},
+                        "message": {"type": "string"},
+                        "apiVersion": {"type": "string"},
+                        "component": {"type": "string"},
+                        "host": {"type": "string"},
+                        "labels": {
+                          "type": "object",
+                          "additionalProperties": {"type": "string"}
+                        },
+                        "annotations": {
+                          "type": "object",
+                          "additionalProperties": {"type": "string"}
+                        }
+                      }
+                    }
+                  },
+                  "routes": {
+                    "type": "array",
+                    "description": "Nested sub-routes (recursive routing - same structure as parent routes)",
+                    "items": {
+                      "type": "object",
+                      "description": "Sub-route (supports nested routing)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": ["routes"]
+        },
+        "receivers": {
+          "type": "array",
+          "description": "List of event receivers (sinks) (required, must not be empty)",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Receiver name"
+              },
+              "stdout": {
+                "type": "object",
+                "description": "Stdout receiver configuration",
+                "properties": {
+                  "deDot": {
+                    "type": "boolean",
+                    "description": "Replace dots in labels/annotations with underscores",
+                    "default": false
+                  },
+                  "layout": {
+                    "type": "object",
+                    "description": "Custom layout template for events"
+                  }
+                }
+              },
+              "loki": {
+                "type": "object",
+                "description": "Loki receiver configuration",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "Loki push API URL",
+                    "format": "uri"
+                  },
+                  "streamLabels": {
+                    "type": "object",
+                    "description": "Loki stream labels",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "headers": {
+                    "type": "object",
+                    "description": "HTTP headers to include in requests",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "layout": {
+                    "type": "object",
+                    "description": "Custom layout template for events"
+                  },
+                  "tls": {
+                    "type": "object",
+                    "description": "TLS configuration",
+                    "properties": {
+                      "insecureSkipVerify": {
+                        "type": "boolean",
+                        "description": "Skip TLS certificate verification",
+                        "default": false
+                      },
+                      "serverName": {
+                        "type": "string",
+                        "description": "Server name for TLS verification"
+                      },
+                      "caFile": {
+                        "type": "string",
+                        "description": "Path to CA certificate file"
+                      },
+                      "certFile": {
+                        "type": "string",
+                        "description": "Path to client certificate file"
+                      },
+                      "keyFile": {
+                        "type": "string",
+                        "description": "Path to client key file"
+                      }
+                    }
+                  }
+                },
+                "required": ["url"]
+              },
+              "webhook": {
+                "type": "object",
+                "description": "Webhook receiver configuration"
+              },
+              "elasticsearch": {
+                "type": "object",
+                "description": "Elasticsearch receiver configuration"
+              },
+              "slack": {
+                "type": "object",
+                "description": "Slack receiver configuration"
+              },
+              "kafka": {
+                "type": "object",
+                "description": "Kafka receiver configuration"
+              },
+              "file": {
+                "type": "object",
+                "description": "File receiver configuration"
+              },
+              "opsgenie": {
+                "type": "object",
+                "description": "Opsgenie receiver configuration"
+              },
+              "opensearch": {
+                "type": "object",
+                "description": "OpenSearch receiver configuration"
+              },
+              "kinesis": {
+                "type": "object",
+                "description": "AWS Kinesis receiver configuration"
+              },
+              "firehose": {
+                "type": "object",
+                "description": "AWS Firehose receiver configuration"
+              },
+              "sns": {
+                "type": "object",
+                "description": "AWS SNS receiver configuration"
+              },
+              "sqs": {
+                "type": "object",
+                "description": "AWS SQS receiver configuration"
+              },
+              "syslog": {
+                "type": "object",
+                "description": "Syslog receiver configuration"
+              },
+              "pubsub": {
+                "type": "object",
+                "description": "Google Cloud Pub/Sub receiver configuration"
+              },
+              "opscenter": {
+                "type": "object",
+                "description": "AWS OpsCenter receiver configuration"
+              },
+              "teams": {
+                "type": "object",
+                "description": "Microsoft Teams receiver configuration"
+              },
+              "bigquery": {
+                "type": "object",
+                "description": "Google BigQuery receiver configuration"
+              },
+              "eventbridge": {
+                "type": "object",
+                "description": "AWS EventBridge receiver configuration"
+              },
+              "pipe": {
+                "type": "object",
+                "description": "Pipe receiver configuration (output to file descriptor)"
+              },
+              "inMemory": {
+                "type": "object",
+                "description": "In-memory receiver (for testing only, not recommended for production)"
+              }
+            },
+            "required": ["name"]
+          }
+        }
+      },
+      "required": ["route", "receivers"]
+    },
+    "prometheus": {
+      "type": "object",
+      "description": "Prometheus scraping configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to enable Prometheus scraping annotations",
+          "default": true
+        },
+        "scrape": {
+          "type": "boolean",
+          "description": "Whether Prometheus should scrape this pod",
+          "default": true
+        },
+        "port": {
+          "type": "integer",
+          "description": "Port where metrics are exposed",
+          "minimum": 1,
+          "maximum": 65535,
+          "default": 2112
+        },
+        "path": {
+          "type": "string",
+          "description": "Path to the metrics endpoint",
+          "default": "/metrics"
+        }
+      },
+      "required": ["enabled", "scrape", "port", "path"]
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional pod annotations (Prometheus annotations are automatically added if prometheus.enabled is true)",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {}
+    },
+    "livenessProbe": {
+      "type": "object",
+      "description": "Liveness probe configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to enable the liveness probe",
+          "default": true
+        },
+        "initialDelaySeconds": {
+          "type": "integer",
+          "description": "Number of seconds after the container has started before liveness probes are initiated",
+          "minimum": 0,
+          "default": 5
+        },
+        "periodSeconds": {
+          "type": "integer",
+          "description": "How often (in seconds) to perform the probe",
+          "minimum": 1,
+          "default": 5
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "description": "Number of seconds after which the probe times out",
+          "minimum": 1,
+          "default": 2
+        },
+        "failureThreshold": {
+          "type": "integer",
+          "description": "Minimum consecutive failures for the probe to be considered failed",
+          "minimum": 1,
+          "default": 5
+        },
+        "successThreshold": {
+          "type": "integer",
+          "description": "Minimum consecutive successes for the probe to be considered successful after having failed",
+          "minimum": 1,
+          "default": 1
+        }
+      },
+      "required": ["enabled"]
+    },
+    "readinessProbe": {
+      "type": "object",
+      "description": "Readiness probe configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to enable the readiness probe",
+          "default": true
+        },
+        "initialDelaySeconds": {
+          "type": "integer",
+          "description": "Number of seconds after the container has started before readiness probes are initiated",
+          "minimum": 0,
+          "default": 5
+        },
+        "periodSeconds": {
+          "type": "integer",
+          "description": "How often (in seconds) to perform the probe",
+          "minimum": 1,
+          "default": 5
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "description": "Number of seconds after which the probe times out",
+          "minimum": 1,
+          "default": 2
+        },
+        "failureThreshold": {
+          "type": "integer",
+          "description": "Minimum consecutive failures for the probe to be considered failed",
+          "minimum": 1,
+          "default": 1
+        },
+        "successThreshold": {
+          "type": "integer",
+          "description": "Minimum consecutive successes for the probe to be considered successful after having failed",
+          "minimum": 1,
+          "default": 1
+        }
+      },
+      "required": ["enabled"]
+    },
+    "startupProbe": {
+      "type": "object",
+      "description": "Startup probe configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to enable the startup probe",
+          "default": false
+        },
+        "initialDelaySeconds": {
+          "type": "integer",
+          "description": "Number of seconds after the container has started before startup probes are initiated",
+          "minimum": 0,
+          "default": 40
+        },
+        "periodSeconds": {
+          "type": "integer",
+          "description": "How often (in seconds) to perform the probe",
+          "minimum": 1,
+          "default": 10
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "description": "Number of seconds after which the probe times out",
+          "minimum": 1,
+          "default": 15
+        },
+        "failureThreshold": {
+          "type": "integer",
+          "description": "Minimum consecutive failures for the probe to be considered failed",
+          "minimum": 1,
+          "default": 15
+        },
+        "successThreshold": {
+          "type": "integer",
+          "description": "Minimum consecutive successes for the probe to be considered successful after having failed",
+          "minimum": 1,
+          "default": 1
+        }
+      },
+      "required": ["enabled"]
+    },
+    "pdb": {
+      "type": "object",
+      "description": "PodDisruptionBudget configuration",
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Whether to create a PodDisruptionBudget",
+          "default": true
+        },
+        "minAvailable": {
+          "oneOf": [
+            {"type": "string"},
+            {"type": "integer"}
+          ],
+          "description": "Minimum number of pods that must be available (e.g., '1', 1, '50%'). Mutually exclusive with maxUnavailable."
+        },
+        "maxUnavailable": {
+          "oneOf": [
+            {"type": "string"},
+            {"type": "integer"}
+          ],
+          "description": "Maximum number of pods that can be unavailable (e.g., '1', 1, '25%'). Mutually exclusive with minAvailable."
+        }
+      },
+      "required": ["create"]
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Node selector for pod scheduling",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "affinity": {
+      "type": "object",
+      "description": "Pod affinity rules"
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Pod tolerations",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": ["namespace", "config"]
+}
+

@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kubernetes-event-exporter.fullname" . }}
+  namespace: {{ include "kubernetes-event-exporter.namespace" . }}
+  labels:
+    {{- include "kubernetes-event-exporter.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "kubernetes-event-exporter.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubernetes-event-exporter.selectorLabels" . | nindent 8 }}
+        version: v1
+      annotations:
+        {{- $annotations := .Values.podAnnotations | default dict }}
+        {{- if .Values.prometheus.enabled }}
+        {{- $promAnnotations := dict "prometheus.io/scrape" (toString .Values.prometheus.scrape) "prometheus.io/port" (toString .Values.prometheus.port) "prometheus.io/path" .Values.prometheus.path }}
+        {{- $annotations = merge $annotations $promAnnotations }}
+        {{- end }}
+        checksum/config: {{ include "kubernetes-event-exporter.configChecksum" . }}
+        {{- toYaml $annotations | nindent 8 }}
+    spec:
+      {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "kubernetes-event-exporter.fullname" . }}
+      {{- if .Values.securityContext.podSecurityContext.enabled }}
+      {{- $podSecCtx := omit .Values.securityContext.podSecurityContext "enabled" }}
+      securityContext:
+        {{- toYaml $podSecCtx | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- if .Values.securityContext.containerSecurityContext.enabled }}
+          {{- $containerSecCtx := omit .Values.securityContext.containerSecurityContext "enabled" }}
+          securityContext:
+            {{- toYaml $containerSecCtx | nindent 12 }}
+          {{- end }}
+          image: {{ include "kubernetes-event-exporter.image" . | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - -conf=/data/config.yaml
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 2112
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 2112
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.startupProbe.enabled }}
+          startupProbe:
+            httpGet:
+              path: /metrics
+              port: 2112
+            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+            successThreshold: {{ .Values.startupProbe.successThreshold }}
+          {{- end }}
+          volumeMounts:
+            - mountPath: /data
+              name: cfg
+      volumes:
+        - name: cfg
+          configMap:
+            name: {{ include "kubernetes-event-exporter.fullname" . }}-cfg
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,37 @@
+================================================================================
+  Kubernetes Event Exporter has been installed!
+================================================================================
+
+1. Check the deployment status:
+   kubectl get pods --namespace {{ .Values.namespace | default .Release.Namespace }} -l app.kubernetes.io/name={{ include "kubernetes-event-exporter.name" . }},app.kubernetes.io/instance={{ .Release.Name }}
+
+2. View the application logs:
+   kubectl logs --namespace {{ .Values.namespace | default .Release.Namespace }} -l app.kubernetes.io/name={{ include "kubernetes-event-exporter.name" . }},app.kubernetes.io/instance={{ .Release.Name }} -f
+
+3. View metrics endpoint (Prometheus):
+   export POD_NAME=$(kubectl get pods --namespace {{ .Values.namespace | default .Release.Namespace }} -l "app.kubernetes.io/name={{ include "kubernetes-event-exporter.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+   kubectl port-forward --namespace {{ .Values.namespace | default .Release.Namespace }} $POD_NAME 2112:2112
+   # Then visit http://localhost:2112/metrics
+
+4. Verify events are being exported:
+   kubectl logs --namespace {{ .Values.namespace | default .Release.Namespace }} -l app.kubernetes.io/name={{ include "kubernetes-event-exporter.name" . }},app.kubernetes.io/instance={{ .Release.Name }} | grep -i "sending event\|error\|Cannot send"
+
+5. View current configuration:
+   kubectl get configmap {{ include "kubernetes-event-exporter.fullname" . }}-cfg -n {{ .Values.namespace | default .Release.Namespace }} -o yaml
+
+6. Update configuration:
+   # Edit values.yaml, then run:
+   helm upgrade {{ .Release.Name }} kubernetes-event-exporter -n {{ .Values.namespace | default .Release.Namespace }} -f values.yaml
+
+7. Troubleshooting:
+   - If events are not being exported, check the logs for errors
+   - Verify receivers are correctly configured in values.yaml
+   - Ensure the target services (Loki, Elasticsearch, etc.) are accessible
+   - Check RBAC permissions:
+     kubectl get clusterrolebinding -l app.kubernetes.io/name={{ include "kubernetes-event-exporter.name" . }}
+   - Verify the ConfigMap was updated after changes:
+     kubectl get configmap {{ include "kubernetes-event-exporter.fullname" . }}-cfg -n {{ .Values.namespace | default .Release.Namespace }}
+
+For more information, visit: https://github.com/resmoio/kubernetes-event-exporter
+
+================================================================================

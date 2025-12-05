@@ -2,5 +2,6 @@ owner: itakurah
 git-repo: kubernetes-event-exporter
 charts_dir: charts/kubernetes-event-exporter
 skip_existing: true
+git-base-url: https://api.github.com/
 pages_branch: gh-pages
 packages_with_index: true

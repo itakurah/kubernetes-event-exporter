@@ -2,7 +2,7 @@ apiVersion: v2
 name: kubernetes-event-exporter
 description: A Helm chart for kubernetes-event-exporter without Bitnami dependencies
 type: application
-version: 0.2.1
+version: 0.2.2
 appVersion: "v1.7"
 license: MIT
 keywords:

@@ -31,5 +31,6 @@ jobs:
           pages-branch: gh-pages
           release-name-template: "{{ .Name }}-{{ .Version }}"
           skip-existing: true
+          packages_with_index: true
         env:
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}

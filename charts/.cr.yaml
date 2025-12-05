@@ -1,6 +1,6 @@
 owner: itakurah
 git-repo: kubernetes-event-exporter
-charts-dir: charts/kubernetes-event-exporter
+charts_dir: charts/kubernetes-event-exporter
 skip_existing: true
 pages_branch: gh-pages
-release-name-template: "{{ .Name }}-{{ .Version }}"
+packages_with_index: true

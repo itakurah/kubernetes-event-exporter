@@ -1,6 +1,5 @@
 owner: itakurah
 git-repo: kubernetes-event-exporter
-git-base-url: https://itakurah.github.io/kubernetes-event-exporter/
 charts_dir: charts/kubernetes-event-exporter
 skip_existing: true
 pages_branch: gh-pages

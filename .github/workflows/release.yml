@@ -27,10 +27,9 @@ jobs:
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.7.0
         with:
-          charts-dir: charts/kubernetes-event-exporter
-          pages-branch: gh-pages
-          release-name-template: "{{ .Name }}-{{ .Version }}"
-          skip-existing: true
+          charts_dir: charts/kubernetes-event-exporter
+          pages_branch: gh-pages
+          skip_existing: true
           packages_with_index: true
         env:
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}

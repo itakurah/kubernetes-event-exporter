@@ -19,7 +19,7 @@ maintainers:
 annotations:
   artifacthub.io/category: monitoring-logging
   artifacthub.io/changes: |
-    - kind: update
+    - kind: added
       description: Initial Helm chart for Kubernetes Event Exporter with Artifact Hub annotations
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/license: MIT

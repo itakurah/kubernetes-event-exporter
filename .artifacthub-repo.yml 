@@ -1,9 +1,0 @@
-repositoryID: "0441cffc-7432-4ddd-a70b-ee01cf84abfc"
-owners:
-  - name: Niklas Hoefflin
-    email: niklas.hoefflin@outlook.com
-displayName: Kubernetes Event Exporter Helm Charts
-description: Helm chart for deploying the Kubernetes Event Exporter.
-links:
-  - name: Original project
-    url: https://github.com/resmoio/kubernetes-event-exporter

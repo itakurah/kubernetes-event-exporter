@@ -2,7 +2,7 @@ apiVersion: v2
 name: kubernetes-event-exporter
 description: A Helm chart for kubernetes-event-exporter without Bitnami dependencies
 type: application
-version: 0.2.0
+version: 0.2.1
 appVersion: "v1.7"
 license: MIT
 keywords:
@@ -16,3 +16,25 @@ sources:
 maintainers:
   - name: Niklas Hoefflin (itakurah)
     url: https://github.com/itakurah
+annotations:
+  artifacthub.io/category: monitoring-logging
+  artifacthub.io/changes: |
+    - kind: update
+      description: Initial Helm chart for Kubernetes Event Exporter with Artifact Hub annotations
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: kubernetes-event-exporter
+      image: ghcr.io/resmoio/kubernetes-event-exporter:v1.7
+      platforms:
+        - linux/amd64
+        - linux/arm64
+  artifacthub.io/links: |
+    - name: Support (Helm chart)
+      url: https://github.com/itakurah/kubernetes-event-exporter/issues
+    - name: Support (Resmojo)
+      url: https://github.com/resmoio/kubernetes-event-exporter/issues
+  artifacthub.io/maintainers: |
+    - name: Niklas Hoefflin
+      email: niklas.hoefflin@outlook.com
+  artifacthub.io/alternativeName: kube-event-exporter

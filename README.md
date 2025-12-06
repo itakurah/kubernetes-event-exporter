@@ -20,13 +20,12 @@ helm repo update
 Install or upgrade the chart:
 ```
 helm upgrade --install kubernetes-event-exporter itakurah/kubernetes-event-exporter \
-  --namespace monitoring \
-  --create-namespace
+  --namespace <name>
 ```
 To customize configuration, create a `values.yaml` file and run:
 ```
 helm upgrade --install kubernetes-event-exporter itakurah/kubernetes-event-exporter \
-  --namespace monitoring \
+  --namespace <name> \
   -f values.yaml
 ```
 

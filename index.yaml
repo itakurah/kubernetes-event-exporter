@@ -1,0 +1,25 @@
+apiVersion: v1
+entries:
+  kubernetes-event-exporter:
+  - apiVersion: v2
+    appVersion: v1.7
+    created: "2025-12-06T11:58:06.062863831Z"
+    description: A Helm chart for kubernetes-event-exporter without Bitnami dependencies
+    digest: a94c7ac573050a1d584b480c084317e82dbda33f9144ba05d9485786c3d76bb6
+    home: https://github.com/resmoio/kubernetes-event-exporter
+    keywords:
+    - kubernetes
+    - events
+    - monitoring
+    - logging
+    maintainers:
+    - name: Niklas Hoefflin (itakurah)
+      url: https://github.com/itakurah
+    name: kubernetes-event-exporter
+    sources:
+    - https://github.com/resmoio/kubernetes-event-exporter
+    type: application
+    urls:
+    - kubernetes-event-exporter-0.2.0.tgz
+    version: 0.2.0
+generated: "2025-12-06T11:58:06.062870023Z"

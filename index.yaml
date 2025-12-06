@@ -1,6 +1,49 @@
 apiVersion: v1
 entries:
   kubernetes-event-exporter:
+  - annotations:
+      artifacthub.io/alternativeName: kube-event-exporter
+      artifacthub.io/category: monitoring-logging
+      artifacthub.io/changes: |
+        - kind: update
+          description: Initial Helm chart for Kubernetes Event Exporter with Artifact Hub annotations
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/images: |
+        - name: kubernetes-event-exporter
+          image: ghcr.io/resmoio/kubernetes-event-exporter:v1.7
+          platforms:
+            - linux/amd64
+            - linux/arm64
+      artifacthub.io/license: MIT
+      artifacthub.io/links: |
+        - name: Support (Helm chart)
+          url: https://github.com/itakurah/kubernetes-event-exporter/issues
+        - name: Support (Resmojo)
+          url: https://github.com/resmoio/kubernetes-event-exporter/issues
+      artifacthub.io/maintainers: |
+        - name: Niklas Hoefflin
+          email: niklas.hoefflin@outlook.com
+    apiVersion: v2
+    appVersion: v1.7
+    created: "2025-12-06T13:35:40.879186522Z"
+    description: A Helm chart for kubernetes-event-exporter without Bitnami dependencies
+    digest: 46de5d2b1a3b7fa820f518e3a563a1ccb4b5623cbb945924edc19a0614348192
+    home: https://github.com/resmoio/kubernetes-event-exporter
+    keywords:
+    - kubernetes
+    - events
+    - monitoring
+    - logging
+    maintainers:
+    - name: Niklas Hoefflin (itakurah)
+      url: https://github.com/itakurah
+    name: kubernetes-event-exporter
+    sources:
+    - https://github.com/resmoio/kubernetes-event-exporter
+    type: application
+    urls:
+    - kubernetes-event-exporter-0.2.1.tgz
+    version: 0.2.1
   - apiVersion: v2
     appVersion: v1.7
     created: "2025-12-06T11:58:06.062863831Z"
@@ -22,4 +65,4 @@ entries:
     urls:
     - kubernetes-event-exporter-0.2.0.tgz
     version: 0.2.0
-generated: "2025-12-06T11:58:06.062870023Z"
+generated: "2025-12-06T13:35:40.879194126Z"

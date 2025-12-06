@@ -37,4 +37,3 @@ annotations:
   artifacthub.io/maintainers: |
     - name: Niklas Hoefflin
       email: niklas.hoefflin@outlook.com
-  artifacthub.io/alternativeName: kube-event-exporter

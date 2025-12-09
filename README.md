@@ -1,3 +1,6 @@
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/kubernetes-event-exporter)](https://artifacthub.io/packages/helm/itakurah/kubernetes-event-exporter)
+![Chart Version](https://img.shields.io/github/v/release/itakurah/kubernetes-event-exporter?color=3C7DD9&label=Chart%20Version)
+[![License: MIT](https://img.shields.io/badge/License-MIT-3C7DD9.svg?logoColor=white)](./LICENSE)
 # kubernetes-event-exporter
 
 > **Note:** This is an active fork of [Resmo Kubernetes Event Exporter](https://github.com/resmoio/kubernetes-event-exporter).  
@@ -8,6 +11,14 @@
 
 This tool allows exporting the often missed Kubernetes events to various outputs so that they can be used for
 observability or alerting purposes.
+
+---
+
+## Artifact Hub
+
+This Helm chart is published and versioned on [Artifact Hub](https://artifacthub.io/packages/helm/itakurah/kubernetes-event-exporter).
+
+---
 
 ## Helm Deployment
 
@@ -29,8 +40,9 @@ helm upgrade --install kubernetes-event-exporter itakurah/kubernetes-event-expor
   -f values.yaml
 ```
 
-For full configuration details, see the original [Resmo Kubernetes Event Exporter documentation](https://github.com/resmoio/kubernetes-event-exporter#configuration)
-.
+For full configuration details, see the original [Resmo Kubernetes Event Exporter documentation](https://github.com/resmoio/kubernetes-event-exporter#configuration).
+
+---
 
 ## Original Project
 

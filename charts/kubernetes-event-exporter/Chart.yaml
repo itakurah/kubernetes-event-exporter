@@ -2,7 +2,7 @@ apiVersion: v2
 name: kubernetes-event-exporter
 description: A Helm chart for kubernetes-event-exporter without Bitnami dependencies
 type: application
-version: 0.2.1
+version: 0.2.2
 appVersion: "v1.7"
 license: MIT
 keywords:
@@ -19,13 +19,13 @@ maintainers:
 annotations:
   artifacthub.io/category: monitoring-logging
   artifacthub.io/changes: |
-    - kind: added
-      description: Initial Helm chart for Kubernetes Event Exporter with Artifact Hub annotations
+    - kind: changed
+      description: Switch container image to itakurah/kubernetes-event-exporter
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/license: MIT
   artifacthub.io/images: |
     - name: kubernetes-event-exporter
-      image: ghcr.io/resmoio/kubernetes-event-exporter:v1.7
+      image: ghcr.io/itakurah/kubernetes-event-exporter:v1.7
       platforms:
         - linux/amd64
         - linux/arm64

@@ -6,7 +6,7 @@
 ## @param image.pullSecrets Specify docker-registry secret names as an array
 image:
   registry: "ghcr.io"
-  repository: resmoio/kubernetes-event-exporter
+  repository: itakurah/kubernetes-event-exporter
   tag: "v1.7"
   digest: ""
   pullPolicy: IfNotPresent

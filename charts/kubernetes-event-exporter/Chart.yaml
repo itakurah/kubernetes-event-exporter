@@ -2,7 +2,7 @@ apiVersion: v2
 name: kubernetes-event-exporter
 description: A Helm chart for kubernetes-event-exporter without Bitnami dependencies
 type: application
-version: 0.2.2
+version: 0.2.3
 appVersion: "v1.7"
 license: MIT
 keywords:
@@ -20,7 +20,9 @@ annotations:
   artifacthub.io/category: monitoring-logging
   artifacthub.io/changes: |
     - kind: changed
-      description: Switch container image to itakurah/kubernetes-event-exporter
+      description: Removed alternativeName and metadata issues
+    - kind: fixed
+      description: 0.2.2 contains broken metadata; upgrade to 0.2.3
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/license: MIT
   artifacthub.io/images: |
@@ -37,4 +39,3 @@ annotations:
   artifacthub.io/maintainers: |
     - name: Niklas Hoefflin
       email: niklas.hoefflin@outlook.com
-  artifacthub.io/alternativeName: kube-event-exporter

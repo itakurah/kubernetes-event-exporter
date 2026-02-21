@@ -2,6 +2,50 @@ apiVersion: v1
 entries:
   kubernetes-event-exporter:
   - annotations:
+      artifacthub.io/category: monitoring-logging
+      artifacthub.io/changes: |
+        - kind: changed
+          description: Removed alternativeName and metadata issues
+        - kind: fixed
+          description: 0.2.2 contains broken metadata; upgrade to 0.2.3
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/images: |
+        - name: kubernetes-event-exporter
+          image: ghcr.io/itakurah/kubernetes-event-exporter:v1.7
+          platforms:
+            - linux/amd64
+            - linux/arm64
+      artifacthub.io/license: MIT
+      artifacthub.io/links: |
+        - name: Support (Helm chart)
+          url: https://github.com/itakurah/kubernetes-event-exporter/issues
+        - name: Support (Resmojo)
+          url: https://github.com/resmoio/kubernetes-event-exporter/issues
+      artifacthub.io/maintainers: |
+        - name: Niklas Hoefflin
+          email: niklas.hoefflin@outlook.com
+    apiVersion: v2
+    appVersion: v1.7
+    created: "2026-02-21T09:07:31.069989349Z"
+    description: A Helm chart for kubernetes-event-exporter without Bitnami dependencies
+    digest: 466787318db74ec3522c28e33474185967183aeaa9cfc25514c132eee282e17a
+    home: https://github.com/resmoio/kubernetes-event-exporter
+    keywords:
+    - kubernetes
+    - events
+    - monitoring
+    - logging
+    maintainers:
+    - name: Niklas Hoefflin (itakurah)
+      url: https://github.com/itakurah
+    name: kubernetes-event-exporter
+    sources:
+    - https://github.com/resmoio/kubernetes-event-exporter
+    type: application
+    urls:
+    - kubernetes-event-exporter-0.2.3.tgz
+    version: 0.2.3
+  - annotations:
       artifacthub.io/alternativeName: kube-event-exporter
       artifacthub.io/category: monitoring-logging
       artifacthub.io/changes: |
@@ -107,4 +151,4 @@ entries:
     urls:
     - kubernetes-event-exporter-0.2.0.tgz
     version: 0.2.0
-generated: "2026-02-21T07:38:22.091178459Z"
+generated: "2026-02-21T09:07:31.070005379Z"

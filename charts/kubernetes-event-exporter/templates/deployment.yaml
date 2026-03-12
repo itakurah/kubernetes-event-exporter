@@ -21,7 +21,7 @@ spec:
         {{- $promAnnotations := dict "prometheus.io/scrape" (toString .Values.prometheus.scrape) "prometheus.io/port" (toString .Values.prometheus.port) "prometheus.io/path" .Values.prometheus.path }}
         {{- $annotations = merge $annotations $promAnnotations }}
         {{- end }}
-        checksum/config: {{ include "kubernetes-event-exporter.configChecksum" . }}
+        checksum/config: {{ include "kubernetes-event-exporter.configChecksum" . | quote }}
         {{- toYaml $annotations | nindent 8 }}
     spec:
       {{- with .Values.image.pullSecrets }}
